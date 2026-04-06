@@ -1,0 +1,52 @@
+{
+  "id": "NEXO_001",
+  "fecha_generacion": "2026-04-06",
+  "version": 1,
+  "generado_por": "MOT-005",
+  "identidad": {
+    "nombre_sanscrito": "Tadasana",
+    "nombre_espanol": "Montana",
+    "nivel": "principiante",
+    "zona_principal": "columna",
+    "zonas_secundarias": [],
+    "categoria_asana": "pie"
+  },
+  "construccion": {
+    "posicion_partida": "",
+    "secuencia_entrada": [],
+    "ajustes_progresivos": [],
+    "puntos_alineacion": [],
+    "respiracion": "",
+    "tiempo_permanencia": "5-10 respiraciones",
+    "secuencia_salida": ""
+  },
+  "anatomia": {
+    "musculos_agonistas": [],
+    "musculos_antagonistas": [],
+    "cadenas_musculares": [],
+    "articulaciones": []
+  },
+  "beneficios": {
+    "funcionales": [],
+    "sistemicos": [],
+    "indicaciones_clinicas": []
+  },
+  "adaptaciones_patologia": [],
+  "variantes": {
+    "mas_accesible": {
+      "nombre": "",
+      "descripcion": "",
+      "props": []
+    },
+    "mas_intensa": {
+      "nombre": "",
+      "descripcion": "",
+      "props": []
+    }
+  },
+  "imagenes": {
+    "postura_general": "",
+    "anatomica": "",
+    "detalle_alineacion": ""
+  }
+}
