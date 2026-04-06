@@ -9,8 +9,18 @@
       "zona_principal": "columna",
       "categoria": "pie",
       "fecha": "2026-04-06"
+    },
+    {
+      "id": "NEXO_002",
+      "file": "data/NEXO_002.json",
+      "nombre_sanscrito": "Vrksasana",
+      "nombre_espanol": "Arbol",
+      "nivel": "principiante",
+      "zona_principal": "miembros_inferiores",
+      "categoria": "pie",
+      "fecha": "2026-04-06"
     }
   ],
-  "ultima_actualizacion": "2026-04-06T21:54:00.411284",
-  "total_fichas": 1
+  "ultima_actualizacion": "2026-04-06T21:58:31.351659",
+  "total_fichas": 2
 }
