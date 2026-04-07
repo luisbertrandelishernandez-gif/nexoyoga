@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexoyoga</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧘</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Nexoyoga">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:'DM Sans',sans-serif;background:#f8f7f4;color:#1e293b;font-size:18px;line-height:1.6}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+h1,h2,h3,h4{font-family:'DM Serif Display',serif;font-weight:normal;line-height:1.3}
+.container{max-width:900px;margin:0 auto;padding:24px}
+.header{background:#0F6E56;color:#fff;padding:32px 24px;text-align:center}
+.header h1{font-size:42px;margin-bottom:8px}
+.header p{font-size:18px;opacity:0.9}
+.stats{background:#fff;border:2px solid #e2e0db;border-radius:12px;padding:20px;margin:24px 0;text-align:center}
+.stats .num{font-size:48px;font-family:'DM Serif Display',serif;color:#0F6E56;line-height:1}
+.stats .lbl{font-size:16px;color:#64748b;margin-top:4px}
+.section-title{font-size:24px;margin:32px 0 16px;color:#1e293b}
+.filters{background:#fff;border:2px solid #e2e0db;border-radius:12px;padding:20px;margin-bottom:24px}
+.filter-group{margin-bottom:16px}
+.filter-group:last-child{margin-bottom:0}
+.filter-label{font-weight:600;font-size:16px;color:#475569;margin-bottom:8px;display:block}
+.filter-buttons{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:10px 18px;border-radius:24px;background:#f1f5f9;color:#475569;font-size:16px;font-weight:500;border:2px solid transparent;transition:all 0.15s}
+.chip:hover{background:#e2e8f0}
+.chip.active{background:#0F6E56;color:#fff;border-color:#0F6E56}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:16px}
+.card{background:#fff;border:2px solid #e2e0db;border-radius:12px;padding:20px;cursor:pointer;transition:all 0.15s;text-align:left;width:100%}
+.card:hover{border-color:#0F6E56;transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,110,86,0.1)}
+.card h3{font-size:22px;color:#0F6E56;margin-bottom:4px}
+.card .esp{font-size:16px;color:#64748b;margin-bottom:12px;font-style:italic}
+.card .meta{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:13px;padding:4px 10px;border-radius:12px;font-weight:600}
+.tag-nivel{background:#fef3c7;color:#92400e}
+.tag-zona{background:#dbeafe;color:#1e40af}
+.tag-cat{background:#dcfce7;color:#166534}
+.empty{text-align:center;padding:48px 24px;color:#64748b;font-size:18px}
+.ficha-view{background:#fff;border:2px solid #e2e0db;border-radius:12px;padding:32px;margin-top:24px}
+.back-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#f1f5f9;color:#475569;border-radius:24px;font-size:16px;font-weight:600;margin-bottom:24px}
+.back-btn:hover{background:#e2e8f0}
+.ficha-header{border-bottom:3px solid #0F6E56;padding-bottom:20px;margin-bottom:24px}
+.ficha-header h2{font-size:36px;color:#0F6E56;margin-bottom:6px}
+.ficha-header .esp{font-size:20px;color:#64748b;font-style:italic;margin-bottom:12px}
+.ficha-section{margin-top:32px}
+.ficha-section h3{font-size:24px;color:#1e293b;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #e2e0db}
+.ficha-content{font-size:18px;line-height:1.7;color:#1e293b;white-space:pre-wrap;word-wrap:break-word}
+.ficha-content strong{color:#0F6E56;font-weight:700}
+.loading{text-align:center;padding:48px;color:#64748b;font-size:18px}
+.error{background:#fee2e2;color:#991b1b;padding:16px;border-radius:8px;margin:16px 0}
+@media (max-width:600px){
+  .container{padding:16px}
+  .header h1{font-size:32px}
+  .stats .num{font-size:36px}
+  .ficha-view{padding:20px}
+  .ficha-header h2{font-size:28px}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const {useState,useEffect,createElement:h}=React;
+
+const ZONAS={
+  columna:"Columna vertebral",
+  pelvis_cadera:"Pelvis y cadera",
+  core:"Core",
+  miembros_superiores:"Miembros superiores",
+  miembros_inferiores:"Miembros inferiores",
+  suelo_pelvico:"Suelo pelvico",
+  respiracion_sn:"Respiracion y SN"
+};
+const NIVELES={principiante:"Principiante",intermedio:"Intermedio",avanzado:"Avanzado"};
+
+function formatText(text){
+  if(!text)return"";
+  // Limpiar markdown basico para mostrar bonito
+  return text
+    .replace(/\*\*(.+?)\*\*/g,"§§$1§§")
+    .replace(/\[\d+(?:[-,]\d+)*\]/g,"")
+    .replace(/§§(.+?)§§/g,"<<<STRONG>>>$1<<</STRONG>>>");
+}
+
+function ContentBlock({text}){
+  if(!text)return h("div",{className:"ficha-content"},h("em",{style:{color:"#94a3b8"}},"Sin contenido"));
+  const formatted=formatText(text);
+  const parts=formatted.split(/(<<<STRONG>>>.+?<<<\/STRONG>>>)/g);
+  return h("div",{className:"ficha-content"},parts.map((p,i)=>{
+    const m=p.match(/<<<STRONG>>>(.+?)<<<\/STRONG>>>/);
+    return m?h("strong",{key:i},m[1]):h(React.Fragment,{key:i},p);
+  }));
+}
+
+function App(){
+  const[manifest,setManifest]=useState(null);
+  const[loading,setLoading]=useState(true);
+  const[error,setError]=useState(null);
+  const[fichaActual,setFichaActual]=useState(null);
+  const[fichaData,setFichaData]=useState(null);
+  const[filterZona,setFilterZona]=useState("todas");
+  const[filterNivel,setFilterNivel]=useState("todos");
+
+  useEffect(()=>{
+    fetch("data/manifest.json")
+      .then(r=>r.json())
+      .then(d=>{setManifest(d);setLoading(false);})
+      .catch(e=>{setError("No se pudo cargar el manifest: "+e.message);setLoading(false);});
+  },[]);
+
+  useEffect(()=>{
+    if(!fichaActual)return;
+    setFichaData(null);
+    fetch(fichaActual.file)
+      .then(r=>r.json())
+      .then(d=>setFichaData(d))
+      .catch(e=>setError("No se pudo cargar la ficha: "+e.message));
+  },[fichaActual]);
+
+  if(loading)return h("div",{className:"loading"},"Cargando biblioteca...");
+  if(error)return h("div",{className:"container"},h("div",{className:"error"},error));
+
+  // Vista de ficha individual
+  if(fichaActual&&fichaData){
+    const id=fichaData.identidad||{};
+    const raw=fichaData.contenido_raw||{};
+    return h("div",null,
+      h("div",{className:"header"},
+        h("h1",null,"Nexoyoga"),
+        h("p",null,"Yoga terapeutico — Biblioteca de asanas")
+      ),
+      h("div",{className:"container"},
+        h("button",{className:"back-btn",onClick:()=>{setFichaActual(null);setFichaData(null);}},"← Volver a la biblioteca"),
+        h("div",{className:"ficha-view"},
+          h("div",{className:"ficha-header"},
+            h("h2",null,id.nombre_sanscrito||"Sin nombre"),
+            h("div",{className:"esp"},id.nombre_espanol||""),
+            h("div",{className:"meta",style:{display:"flex",gap:"8px",flexWrap:"wrap",marginTop:"12px"}},
+              id.nivel&&h("span",{className:"tag tag-nivel"},NIVELES[id.nivel]||id.nivel),
+              id.zona_principal&&h("span",{className:"tag tag-zona"},ZONAS[id.zona_principal]||id.zona_principal),
+              id.categoria_asana&&h("span",{className:"tag tag-cat"},id.categoria_asana)
+            )
+          ),
+          h("div",{className:"ficha-section"},
+            h("h3",null,"Construccion de la postura"),
+            h(ContentBlock,{text:raw.construccion})
+          ),
+          h("div",{className:"ficha-section"},
+            h("h3",null,"Metodologia y respiracion"),
+            h(ContentBlock,{text:raw.metodologia})
+          ),
+          h("div",{className:"ficha-section"},
+            h("h3",null,"Anatomia funcional"),
+            h(ContentBlock,{text:raw.anatomia})
+          ),
+          h("div",{className:"ficha-section"},
+            h("h3",null,"Adaptaciones por patologia"),
+            h(ContentBlock,{text:raw.patologia})
+          )
+        )
+      )
+    );
+  }
+
+  if(fichaActual&&!fichaData){
+    return h("div",{className:"loading"},"Cargando ficha...");
+  }
+
+  // Vista de biblioteca
+  const fichas=(manifest&&manifest.fichas)||[];
+  const filtradas=fichas.filter(f=>{
+    if(filterZona!=="todas"&&f.zona_principal!==filterZona)return false;
+    if(filterNivel!=="todos"&&f.nivel!==filterNivel)return false;
+    return true;
+  });
+
+  return h("div",null,
+    h("div",{className:"header"},
+      h("h1",null,"Nexoyoga"),
+      h("p",null,"Yoga terapeutico — Biblioteca de asanas")
+    ),
+    h("div",{className:"container"},
+      h("div",{className:"stats"},
+        h("div",{className:"num"},fichas.length),
+        h("div",{className:"lbl"},fichas.length===1?"asana en la biblioteca":"asanas en la biblioteca")
+      ),
+      h("div",{className:"filters"},
+        h("div",{className:"filter-group"},
+          h("label",{className:"filter-label"},"Zona corporal"),
+          h("div",{className:"filter-buttons"},
+            h("button",{className:"chip "+(filterZona==="todas"?"active":""),onClick:()=>setFilterZona("todas")},"Todas"),
+            ...Object.entries(ZONAS).map(([k,v])=>
+              h("button",{key:k,className:"chip "+(filterZona===k?"active":""),onClick:()=>setFilterZona(k)},v)
+            )
+          )
+        ),
+        h("div",{className:"filter-group"},
+          h("label",{className:"filter-label"},"Nivel"),
+          h("div",{className:"filter-buttons"},
+            h("button",{className:"chip "+(filterNivel==="todos"?"active":""),onClick:()=>setFilterNivel("todos")},"Todos"),
+            ...Object.entries(NIVELES).map(([k,v])=>
+              h("button",{key:k,className:"chip "+(filterNivel===k?"active":""),onClick:()=>setFilterNivel(k)},v)
+            )
+          )
+        )
+      ),
+      h("h2",{className:"section-title"},
+        filtradas.length===fichas.length?
+          "Todas las asanas":
+          `${filtradas.length} de ${fichas.length} asanas`
+      ),
+      filtradas.length===0?
+        h("div",{className:"empty"},"No hay asanas que coincidan con los filtros"):
+        h("div",{className:"cards"},
+          filtradas.map(f=>
+            h("button",{key:f.id,className:"card",onClick:()=>setFichaActual(f)},
+              h("h3",null,f.nombre_sanscrito),
+              h("div",{className:"esp"},f.nombre_espanol),
+              h("div",{className:"meta"},
+                f.nivel&&h("span",{className:"tag tag-nivel"},NIVELES[f.nivel]||f.nivel),
+                f.zona_principal&&h("span",{className:"tag tag-zona"},ZONAS[f.zona_principal]||f.zona_principal)
+              )
+            )
+          )
+        )
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(h(App));
+</script>
+</body>
+</html>
