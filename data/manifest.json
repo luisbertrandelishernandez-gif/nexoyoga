@@ -19,8 +19,18 @@
       "zona_principal": "miembros_inferiores",
       "categoria": "pie",
       "fecha": "2026-04-06"
+    },
+    {
+      "id": "NEXO_003",
+      "file": "data/NEXO_003.json",
+      "nombre_sanscrito": "Virabhadrasana I",
+      "nombre_espanol": "Guerrero I",
+      "nivel": "principiante",
+      "zona_principal": "miembros_inferiores",
+      "categoria": "pie",
+      "fecha": "2026-04-07"
     }
   ],
-  "ultima_actualizacion": "2026-04-06T21:58:31.351659",
-  "total_fichas": 2
+  "ultima_actualizacion": "2026-04-07T12:00:26.003924",
+  "total_fichas": 3
 }
